@@ -112,6 +112,7 @@ EOF
 
 ls -l 
 cat docker-compose.yml 
+docker rm -f $(docker ps -aq) || true 
 docker-compose up -d
 docker-compose ps 
 
