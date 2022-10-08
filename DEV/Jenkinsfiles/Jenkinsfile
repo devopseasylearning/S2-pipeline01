@@ -1,7 +1,5 @@
 pipeline {
-    agent { 
-        label 'node1 || node2 || node3 || node4 || node5'
-         }
+    agent any
    
   
     options { buildDiscarder(logRotator(artifactDaysToKeepStr: '',
@@ -79,10 +77,7 @@ pipeline {
      
 
 stage('build ') {
-         agent {
-  label "jenkins-node"
-    }
-            steps {
+   steps {
                sh '''
                COMMIT=$(git rev-parse --short=5 HEAD)
                cd $WORKSPACE/DEV
@@ -93,10 +88,7 @@ stage('build ') {
        
 
       stage('Docker Login') {
-               agent {
-  label "jenkins-node"
-    }
-			steps {
+   		steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			}
 		}
@@ -105,10 +97,7 @@ stage('build ') {
             
 
      stage('Docker push ') {
-                agent {
-  label "jenkins-node"
-    }
-            steps {
+     steps {
                sh '''
                COMMIT=`git rev-parse --short=5 HEAD`
              docker push  devopseasylearning2021/canary-dev:$COMMIT 
@@ -120,10 +109,7 @@ stage('build ') {
 
 
          stage('update charts ') {
-                agent {
-  label 'node1 || node2 || node3 || node4 || node5'
-    }
-            steps {
+       steps {
                sh '''
             cd $WORKSPACE/DEV
             bash -x update-charts.sh
